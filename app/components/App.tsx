@@ -17,6 +17,13 @@ const App = () => {
   const [midTermTotal, setMidTermTotal] = useState(0);
   const [finalTermTotal, setFinalTermTotal] = useState(0);
 
+  // weightages
+  const [assignmentWeightage, setAssignmentWeightage] = useState(20);
+  const [quizWeightage, setQuizWeightage] = useState(20);
+  const [midTermWeightage, setMidTermWeightage] = useState(20);
+  const [finalTermWeightage, setFinalTermWeightage] = useState(40);
+
+
   // set values for last row
   useEffect(() => {
     let assignmentObt = 0;
@@ -68,11 +75,37 @@ const App = () => {
       <main className={styles.container}>
         <h1 className={styles.heading}>Result Calculator</h1>
         <table className={styles.table} id="myTable">
+          {/* headings */}
           <tr>
-            <th colSpan={2}>Assignments</th>
-            <th colSpan={2}>Quizzes</th>
-            <th colSpan={2}>Mid Term</th>
-            <th colSpan={2}>Final Term</th>
+            <th colSpan={2}>Assignments
+              <select name="AssignmentWeightage" id="" onChange={(event) => setAssignmentWeightage(parseInt(event.target.value))}>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20" selected>20</option>
+              </select>
+            </th>
+            <th colSpan={2}>Quizzes
+              <select name="QuizWeightage" id="" onChange={(event) => setQuizWeightage(parseInt(event.target.value))}>
+                <option value="15">15</option>
+                <option value="20" selected>20</option>
+              </select>
+
+            </th>
+            <th colSpan={2}>MidTerm
+              <select name="MidTermWeightage" id="" onChange={(event) => setMidTermWeightage(parseInt(event.target.value))}>
+                <option value="15">15</option>
+                <option value="20" selected>20</option>
+                <option value="25">25</option>
+              </select>
+
+            </th>
+            <th colSpan={2}>FinalTerm
+              <select name="FinalTermWeightage" id="" onChange={(event) => setFinalTermWeightage(parseInt(event.target.value))}>
+                <option value="40" selected>40</option>
+                <option value="45">45</option>
+              </select>
+
+            </th>
           </tr>
           <tr>
             <th>Obtained Marks</th> <th>Total Marks</th>
@@ -82,41 +115,41 @@ const App = () => {
           </tr>
           {data.length !== 0
             ? data.map((item, index) => {
-                const assignment = item.Assignments
-                  ? item.Assignments.split("o")
-                  : [];
-                const quiz = item.Quizzes ? item.Quizzes.split("o") : [];
-                const midTerm = item.Midterm ? item.Midterm.split("o") : [];
-                const finalTerm = item.Finalterm
-                  ? item.Finalterm.split("o")
-                  : [];
-                return (
-                  <>
-                    <tr key={index}>
-                      <td>{assignment[0]}</td>
-                      <td>{assignment[1]}</td>
-                      <td>{quiz[0]}</td>
-                      <td>{quiz[1]}</td>
-                      <td>{midTerm[0]}</td>
-                      <td>{midTerm[1]}</td>
-                      <td>{finalTerm[0]}</td>
-                      <td>{finalTerm[1]}</td>
-                    </tr>
-                  </>
-                );
-              })
+              const assignment = item.Assignments
+                ? item.Assignments.split("o")
+                : [];
+              const quiz = item.Quizzes ? item.Quizzes.split("o") : [];
+              const midTerm = item.Midterm ? item.Midterm.split("o") : [];
+              const finalTerm = item.Finalterm
+                ? item.Finalterm.split("o")
+                : [];
+              return (
+                <>
+                  <tr key={index}>
+                    <td>{assignment[0]}</td>
+                    <td>{assignment[1]}</td>
+                    <td>{quiz[0]}</td>
+                    <td>{quiz[1]}</td>
+                    <td>{midTerm[0]}</td>
+                    <td>{midTerm[1]}</td>
+                    <td>{finalTerm[0]}</td>
+                    <td>{finalTerm[1]}</td>
+                  </tr>
+                </>
+              );
+            })
             : emptyRow.map((cell, index) => (
-                <tr key={index}>
-                  <td>{cell}</td>
-                  <td>{cell}</td>
-                  <td>{cell}</td>
-                  <td>{cell}</td>
-                  <td>{cell}</td>
-                  <td>{cell}</td>
-                  <td>{cell}</td>
-                  <td>{cell}</td>
-                </tr>
-              ))}
+              <tr key={index}>
+                <td>{cell}</td>
+                <td>{cell}</td>
+                <td>{cell}</td>
+                <td>{cell}</td>
+                <td>{cell}</td>
+                <td>{cell}</td>
+                <td>{cell}</td>
+                <td>{cell}</td>
+              </tr>
+            ))}
 
           {/* last row */}
           {data.length !== 0 && (
@@ -132,6 +165,44 @@ const App = () => {
             </tr>
           )}
         </table>
+        {/* grade calculation */}
+        {data.length !== 0
+          && (
+            <>
+              <table className={styles.table} id="myTable">
+                <tr>
+                  <td><b>Assignments: </b>{(assignmentObt / assignmentTotal * assignmentWeightage).toFixed(2)}</td>
+                  <td><b>Quizzes: </b>{(quizObt / quizTotal * quizWeightage).toFixed(2)}</td>
+                  <td><b>Midterm: </b>{(midTermObt / midTermTotal * midTermWeightage).toFixed(2)}</td>
+                  <td><b>FinalTerm: </b>{(finalTermObt / finalTermTotal * finalTermWeightage).toFixed(2)}</td>
+                  <td><b>Total: </b>{parseInt((assignmentObt / assignmentTotal * assignmentWeightage).toFixed(2)) +
+                    parseInt((quizObt / quizTotal * quizWeightage).toFixed(2)) +
+                    parseInt((midTermObt / midTermTotal * midTermWeightage).toFixed(2)) +
+                    parseInt((finalTermObt / finalTermTotal * finalTermWeightage).toFixed(2))
+                  }</td>
+                  <td><b>Grade: </b>{(parseInt((assignmentObt / assignmentTotal * assignmentWeightage).toFixed(2)) +
+                    parseInt((quizObt / quizTotal * quizWeightage).toFixed(2)) +
+                    parseInt((midTermObt / midTermTotal * midTermWeightage).toFixed(2)) +
+                    parseInt((finalTermObt / finalTermTotal * finalTermWeightage).toFixed(2))) >= 90 ? 'A' :
+                    (parseInt((assignmentObt / assignmentTotal * assignmentWeightage).toFixed(2)) +
+                    parseInt((quizObt / quizTotal * quizWeightage).toFixed(2)) +
+                    parseInt((midTermObt / midTermTotal * midTermWeightage).toFixed(2)) +
+                    parseInt((finalTermObt / finalTermTotal * finalTermWeightage).toFixed(2))) >= 80 ? 'B' :
+                    (parseInt((assignmentObt / assignmentTotal * assignmentWeightage).toFixed(2)) +
+                    parseInt((quizObt / quizTotal * quizWeightage).toFixed(2)) +
+                    parseInt((midTermObt / midTermTotal * midTermWeightage).toFixed(2)) +
+                    parseInt((finalTermObt / finalTermTotal * finalTermWeightage).toFixed(2))) >= 70 ? 'C' :
+                    (parseInt((assignmentObt / assignmentTotal * assignmentWeightage).toFixed(2)) +
+                    parseInt((quizObt / quizTotal * quizWeightage).toFixed(2)) +
+                    parseInt((midTermObt / midTermTotal * midTermWeightage).toFixed(2)) +
+                    parseInt((finalTermObt / finalTermTotal * finalTermWeightage).toFixed(2))) >= 86 ? 'D' :
+                    'F'
+                  }</td>
+                </tr>
+              </table>
+            </>
+          )
+        }
         <FileInputButton data={data} setData={setData} />
       </main>
     </>
