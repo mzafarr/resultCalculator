@@ -105,8 +105,8 @@ const App = () => {
                   </>
                 );
               })
-            : emptyRow.map((cell) => (
-                <tr>
+            : emptyRow.map((cell, index) => (
+                <tr key={index}>
                   <td>{cell}</td>
                   <td>{cell}</td>
                   <td>{cell}</td>
