@@ -1,211 +1,260 @@
 "use client";
 import React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "../styles/table.module.css";
 import FileInputButton from "./FileInputButton";
 
 const App = () => {
-  let [data, setData] = useState([]);
-  const emptyRow = ["-", "-", "-", "-"];
-
-  const [assignmentObt, setAssignmentObt] = useState(0);
-  const [quizObt, setQuizObt] = useState(0);
-  const [midTermObt, setMidTermObt] = useState(0);
-  const [finalTermObt, setFinalTermObt] = useState(0);
-  const [assignmentTotal, setAssignmentTotal] = useState(0);
-  const [quizTotal, setQuizTotal] = useState(0);
-  const [midTermTotal, setMidTermTotal] = useState(0);
-  const [finalTermTotal, setFinalTermTotal] = useState(0);
-
+  const [data, setData] = useState([]);
+  const emptyData = ["-", "-", "-", "-"];
   // weightages
   const [assignmentWeightage, setAssignmentWeightage] = useState(20);
   const [quizWeightage, setQuizWeightage] = useState(20);
   const [midTermWeightage, setMidTermWeightage] = useState(20);
   const [finalTermWeightage, setFinalTermWeightage] = useState(40);
+  const [labWeightage, setLabWeightage] = useState(0);
+  const [CPWeightage, setCPWeightage] = useState(0);
+  const [isWeightageCorrect, setIsWeightageCorrect] = useState(true);
 
+  const checkWeightage = () => {
+    const totalWeightage =
+      assignmentWeightage +
+      quizWeightage +
+      midTermWeightage +
+      finalTermWeightage +
+      labWeightage +
+      CPWeightage;
 
-  // set values for last row
-  useEffect(() => {
-    let assignmentObt = 0;
-    let assignmentTotal = 0;
-    let quizObt = 0;
-    let quizTotal = 0;
-    let midTermObt = 0;
-    let midTermTotal = 0;
-    let finalTermObt = 0;
-    let finalTermTotal = 0;
-
-    for (let i = 0; i < data.length; i++) {
-      assignmentObt += parseInt(
-        data[i].Assignments ? data[i].Assignments.split("o")[0] : 0
-      );
-      assignmentTotal += parseInt(
-        data[i].Assignments ? data[i].Assignments.split("o")[1] : 0
-      );
-      quizObt += parseInt(data[i].Quizzes ? data[i].Quizzes.split("o")[0] : 0);
-      quizTotal += parseInt(
-        data[i].Quizzes ? data[i].Quizzes.split("o")[1] : 0
-      );
-      midTermObt += parseInt(
-        data[i].Midterm ? data[i].Midterm.split("o")[0] : 0
-      );
-      midTermTotal += parseInt(
-        data[i].Midterm ? data[i].Midterm.split("o")[1] : 0
-      );
-      finalTermObt += parseInt(
-        data[i].Finalterm ? data[i].Finalterm.split("o")[0] : 0
-      );
-      finalTermTotal += parseInt(
-        data[i].Finalterm ? data[i].Finalterm.split("o")[1] : 0
-      );
+    if (totalWeightage != 100) {
+      setIsWeightageCorrect(false);
+    } else {
+      setIsWeightageCorrect(true);
     }
-
-    setAssignmentObt(assignmentObt);
-    setAssignmentTotal(assignmentTotal);
-    setQuizObt(quizObt);
-    setQuizTotal(quizTotal);
-    setMidTermObt(midTermObt);
-    setMidTermTotal(midTermTotal);
-    setFinalTermObt(finalTermObt);
-    setFinalTermTotal(finalTermTotal);
-  }, [data]);
+  };
 
   return (
-    <>
-      <main className={styles.container}>
-        <h1 className={styles.heading}>Result Calculator</h1>
-        <table className={styles.table} id="myTable">
-          {/* headings */}
-          <tr>
-            <th colSpan={2}>Assignments
-              <select name="AssignmentWeightage" id="" onChange={(event) => setAssignmentWeightage(parseInt(event.target.value))}>
-                <option value="10">10</option>
-                <option value="15">15</option>
-                <option value="20" selected>20</option>
-              </select>
-            </th>
-            <th colSpan={2}>Quizzes
-              <select name="QuizWeightage" id="" onChange={(event) => setQuizWeightage(parseInt(event.target.value))}>
-                <option value="15">15</option>
-                <option value="20" selected>20</option>
-              </select>
+    <main className={styles.container}>
+      <h1 className={styles.heading}>Result Calculator</h1>
+      <div>
+        {!isWeightageCorrect && (
+          <h3 className={styles.message}>
+            Total weightage is not 100%. Kindly fix it otherwise you will get
+            incorrect results.
+          </h3>
+        )}
+      </div>
+      <table className={styles.table} id="myTable">
+        {/* headings */}
+        <tr>
+          <th colSpan={2}>
+            <button className={styles.button} onClick={checkWeightage}>
+              Confirm Weightage
+            </button>
+          </th>
 
-            </th>
-            <th colSpan={2}>MidTerm
-              <select name="MidTermWeightage" id="" onChange={(event) => setMidTermWeightage(parseInt(event.target.value))}>
-                <option value="15">15</option>
-                <option value="20" selected>20</option>
-                <option value="25">25</option>
-              </select>
+          <th colSpan={2}>
+            Assignments
+            <select
+              name="AssignmentWeightage"
+              id=""
+              onChange={(event) =>
+                setAssignmentWeightage(parseInt(event.target.value))
+              }
+            >
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20" selected>
+                20
+              </option>
+            </select>
+          </th>
+          <th colSpan={2}>
+            Quizzes
+            <select
+              name="QuizWeightage"
+              id=""
+              onChange={(event) =>
+                setQuizWeightage(parseInt(event.target.value))
+              }
+            >
+              <option value="15">15</option>
+              <option value="20" selected>
+                20
+              </option>
+            </select>
+          </th>
+          <th colSpan={2}>
+            MidTerm
+            <select
+              name="MidTermWeightage"
+              id=""
+              onChange={(event) =>
+                setMidTermWeightage(parseInt(event.target.value))
+              }
+            >
+              <option value="15">15</option>
+              <option value="20" selected>
+                20
+              </option>
+              <option value="25">25</option>
+            </select>
+          </th>
+          <th colSpan={2}>
+            FinalTerm
+            <select
+              name="FinalTermWeightage"
+              id=""
+              onChange={(event) =>
+                setFinalTermWeightage(parseInt(event.target.value))
+              }
+            >
+              <option value="40" selected>
+                40
+              </option>
+              <option value="45">45</option>
+            </select>
+          </th>
+          <th colSpan={2}>
+            Lab
+            <select
+              name="LabWeightage"
+              id=""
+              onChange={(event) =>
+                setLabWeightage(parseInt(event.target.value))
+              }
+            >
+              <option value="0" selected>
+                0
+              </option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+            </select>
+          </th>
+          <th colSpan={2}>
+            CP
+            <select
+              name="CP"
+              id=""
+              onChange={(event) => setCPWeightage(parseInt(event.target.value))}
+            >
+              <option value="0" selected>
+                0
+              </option>
+              <option value="5">5</option>
+              <option value="10">10</option>
+            </select>
+          </th>
+          <th colSpan={2}>Result</th>
+        </tr>
+        <tr>
+          <th colSpan={2}>Reg #</th>
+          <th>Obt Marks </th> <th>Total Marks</th>
+          <th>Obt Marks </th> <th>Total Marks</th>
+          <th>Obt Marks </th> <th>Total Marks</th>
+          <th>Obt Marks </th> <th>Total Marks</th>
+          <th>Obt Marks </th> <th>Total Marks</th>
+          <th>Obt Marks </th> <th>Total Marks</th>
+          <th>Percentage</th> <th>Grade</th>
+        </tr>
+        {data.length !== 0 ? (
+          data.map((item, index) => {
+            const assignment = item.Assignment
+              ? item.Assignment.split("o")
+              : [];
+            const quiz = item.Quiz ? item.Quiz.split("o") : [];
+            const midTerm = item.Midterm ? item.Midterm.split("o") : [];
+            const finalTerm = item.Finalterm ? item.Finalterm.split("o") : [];
+            const lab = item.Lab ? item.Lab.split("o") : [];
+            const CP = item.CP ? item.CP.split("o") : [];
 
-            </th>
-            <th colSpan={2}>FinalTerm
-              <select name="FinalTermWeightage" id="" onChange={(event) => setFinalTermWeightage(parseInt(event.target.value))}>
-                <option value="40" selected>40</option>
-                <option value="45">45</option>
-              </select>
+            const totalPercentage = parseFloat(
+              (
+                (item.Quiz ? parseInt(quiz[0]) / parseInt(quiz[1]) : 0) *
+                  quizWeightage +
+                (item.Assignment
+                  ? parseInt(assignment[0]) / parseInt(assignment[1])
+                  : 0) *
+                  assignmentWeightage +
+                (item.Midterm
+                  ? parseInt(midTerm[0]) / parseInt(midTerm[1])
+                  : 0) *
+                  midTermWeightage +
+                (item.Finalterm
+                  ? parseInt(finalTerm[0]) / parseInt(finalTerm[1])
+                  : 0) *
+                  finalTermWeightage +
+                (item.Lab ? parseInt(lab[0]) / parseInt(lab[1]) : 0) *
+                  labWeightage +
+                (item.CP ? parseInt(CP[0]) / parseInt(CP[1]) : 0) * CPWeightage
+              ).toFixed(2)
+            );
 
-            </th>
-          </tr>
-          <tr>
-            <th>Obtained Marks</th> <th>Total Marks</th>
-            <th>Obtained Marks</th> <th>Total Marks</th>
-            <th>Obtained Marks</th> <th>Total Marks</th>
-            <th>Obtained Marks</th> <th>Total Marks</th>
-          </tr>
-          {data.length !== 0
-            ? data.map((item, index) => {
-              const assignment = item.Assignments
-                ? item.Assignments.split("o")
-                : [];
-              const quiz = item.Quizzes ? item.Quizzes.split("o") : [];
-              const midTerm = item.Midterm ? item.Midterm.split("o") : [];
-              const finalTerm = item.Finalterm
-                ? item.Finalterm.split("o")
-                : [];
-              return (
-                <>
-                  <tr key={index}>
-                    <td>{assignment[0]}</td>
-                    <td>{assignment[1]}</td>
-                    <td>{quiz[0]}</td>
-                    <td>{quiz[1]}</td>
-                    <td>{midTerm[0]}</td>
-                    <td>{midTerm[1]}</td>
-                    <td>{finalTerm[0]}</td>
-                    <td>{finalTerm[1]}</td>
-                  </tr>
-                </>
-              );
-            })
-            : emptyRow.map((cell, index) => (
+            const grade =
+              totalPercentage >= 86
+                ? "A"
+                : totalPercentage >= 82
+                ? "A-"
+                : totalPercentage >= 78
+                ? "B+"
+                : totalPercentage >= 74
+                ? "B"
+                : totalPercentage >= 70
+                ? "B-"
+                : totalPercentage >= 66
+                ? "C+"
+                : totalPercentage >= 62
+                ? "C"
+                : totalPercentage >= 58
+                ? "C-"
+                : totalPercentage >= 54
+                ? "D+"
+                : totalPercentage >= 50
+                ? "D"
+                : "F";
+            return (
+              <>
+                <tr key={index}>
+                  <td colSpan={2}>{item.RegNumber}</td>
+                  <td>{assignment && assignment[0]}</td>{" "}
+                  <td>{assignment && assignment[1]}</td>
+                  <td>{quiz && quiz[0]}</td> <td>{quiz && quiz[1]}</td>
+                  <td>{midTerm && midTerm[0]}</td>{" "}
+                  <td>{midTerm && midTerm[1]}</td>
+                  <td>{finalTerm && finalTerm[0]}</td>{" "}
+                  <td>{finalTerm && finalTerm[1]}</td>
+                  <td>{lab && lab[0]}</td> <td>{lab && lab[1]}</td>
+                  <td>{CP && CP[0]}</td> <td>{CP && CP[1]}</td>
+                  <td>{totalPercentage}</td>
+                  <td>{grade}</td>
+                </tr>
+              </>
+            );
+          })
+        ) : (
+          <>
+            {emptyData.map((item, index) => (
               <tr key={index}>
-                <td>{cell}</td>
-                <td>{cell}</td>
-                <td>{cell}</td>
-                <td>{cell}</td>
-                <td>{cell}</td>
-                <td>{cell}</td>
-                <td>{cell}</td>
-                <td>{cell}</td>
+                <td className={styles.empty} colSpan={2}></td>
+                <td className={styles.empty}></td>
+                <td className={styles.empty}></td>
+                <td className={styles.empty}></td> <td className={styles.empty}></td>
+                <td className={styles.empty}></td>
+                <td className={styles.empty}></td>
+                <td className={styles.empty}></td>
+                <td className={styles.empty}></td>
+                <td className={styles.empty}></td> <td className={styles.empty}></td>
+                <td className={styles.empty}></td> <td className={styles.empty}></td>
+                <td className={styles.empty}></td>
+                <td className={styles.empty}></td>
               </tr>
             ))}
+          </>
+        )}
+      </table>
 
-          {/* last row */}
-          {data.length !== 0 && (
-            <tr className={styles.lastRow}>
-              <td>{assignmentObt}</td>
-              <td>{assignmentTotal}</td>
-              <td>{quizObt}</td>
-              <td>{quizTotal}</td>
-              <td>{midTermObt}</td>
-              <td>{midTermTotal}</td>
-              <td>{finalTermObt}</td>
-              <td>{finalTermTotal}</td>
-            </tr>
-          )}
-        </table>
-        {/* grade calculation */}
-        {data.length !== 0
-          && (
-            <>
-              <table className={styles.table} id="myTable">
-                <tr>
-                  <td><b>Assignments: </b>{(assignmentObt / assignmentTotal * assignmentWeightage).toFixed(2)}</td>
-                  <td><b>Quizzes: </b>{(quizObt / quizTotal * quizWeightage).toFixed(2)}</td>
-                  <td><b>Midterm: </b>{(midTermObt / midTermTotal * midTermWeightage).toFixed(2)}</td>
-                  <td><b>FinalTerm: </b>{(finalTermObt / finalTermTotal * finalTermWeightage).toFixed(2)}</td>
-                  <td><b>Total: </b>{parseInt((assignmentObt / assignmentTotal * assignmentWeightage).toFixed(2)) +
-                    parseInt((quizObt / quizTotal * quizWeightage).toFixed(2)) +
-                    parseInt((midTermObt / midTermTotal * midTermWeightage).toFixed(2)) +
-                    parseInt((finalTermObt / finalTermTotal * finalTermWeightage).toFixed(2))
-                  }</td>
-                  <td><b>Grade: </b>{(parseInt((assignmentObt / assignmentTotal * assignmentWeightage).toFixed(2)) +
-                    parseInt((quizObt / quizTotal * quizWeightage).toFixed(2)) +
-                    parseInt((midTermObt / midTermTotal * midTermWeightage).toFixed(2)) +
-                    parseInt((finalTermObt / finalTermTotal * finalTermWeightage).toFixed(2))) >= 90 ? 'A' :
-                    (parseInt((assignmentObt / assignmentTotal * assignmentWeightage).toFixed(2)) +
-                    parseInt((quizObt / quizTotal * quizWeightage).toFixed(2)) +
-                    parseInt((midTermObt / midTermTotal * midTermWeightage).toFixed(2)) +
-                    parseInt((finalTermObt / finalTermTotal * finalTermWeightage).toFixed(2))) >= 80 ? 'B' :
-                    (parseInt((assignmentObt / assignmentTotal * assignmentWeightage).toFixed(2)) +
-                    parseInt((quizObt / quizTotal * quizWeightage).toFixed(2)) +
-                    parseInt((midTermObt / midTermTotal * midTermWeightage).toFixed(2)) +
-                    parseInt((finalTermObt / finalTermTotal * finalTermWeightage).toFixed(2))) >= 70 ? 'C' :
-                    (parseInt((assignmentObt / assignmentTotal * assignmentWeightage).toFixed(2)) +
-                    parseInt((quizObt / quizTotal * quizWeightage).toFixed(2)) +
-                    parseInt((midTermObt / midTermTotal * midTermWeightage).toFixed(2)) +
-                    parseInt((finalTermObt / finalTermTotal * finalTermWeightage).toFixed(2))) >= 86 ? 'D' :
-                    'F'
-                  }</td>
-                </tr>
-              </table>
-            </>
-          )
-        }
-        <FileInputButton data={data} setData={setData} />
-      </main>
-    </>
+      <FileInputButton data={data} setData={setData} />
+    </main>
   );
 };
 
